@@ -29,19 +29,10 @@ public class JoyrunRipple {
         mBuilder = builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            if(builder.getClickMode() == Builder.RIPPLE_MODE){
+            if(builder.getClickMode() == Builder.AUTOFIX_MODE){
                 initRippleDrawable(builder);
             }else if(builder.getClickMode() == Builder.SELECTOR_MODE){
                 initSelectorDrawable(builder);
-            }else if(builder.getClickMode() == Builder.AUTOFIX_MODE) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    initRippleDrawable(builder);
-
-
-                } else {
-                    initSelectorDrawable(builder);
-
-                }
             }
 
         }else {
@@ -174,7 +165,6 @@ public class JoyrunRipple {
         private GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
         //=======================设置背景颜色==================================
 
-        public static final int RIPPLE_MODE = 1;
         public static final int SELECTOR_MODE = 2;
         public static final int AUTOFIX_MODE = 3;
         private int clickMode = AUTOFIX_MODE;
@@ -306,14 +296,5 @@ public class JoyrunRipple {
             return this;
         }
 
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-        public Builder setRippleMode(boolean isRippleMode){
-            if(isRippleMode){
-                clickMode = RIPPLE_MODE;
-            }else {
-                clickMode = AUTOFIX_MODE;
-            }
-            return this;
-        }
     }
 }
