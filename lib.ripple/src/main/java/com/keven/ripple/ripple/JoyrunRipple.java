@@ -1,5 +1,6 @@
 package com.keven.ripple.ripple;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -27,38 +28,54 @@ public class JoyrunRipple {
     public JoyrunRipple(Builder builder){
         mBuilder = builder;
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            //设置水波纹
-            RippleDrawable rippleDrawable = (RippleDrawable) builder.getmContext().getDrawable(R.drawable.ripple_creator_selector);
-            ColorStateList colorStateList = createColorStateList(builder.getPressColor(),builder.getRippleColor());
-            rippleDrawable.setColor(colorStateList);
+        if(builder.getClickMode() == Builder.RIPPLE_MODE){
+            initRippleDrawable(builder);
+        }else if(builder.getClickMode() == Builder.SELECTOR_MODE){
+            initSelectorDrawable(builder);
+        }else if(builder.getClickMode() == Builder.AUTOFIX_MODE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                initRippleDrawable(builder);
 
 
-            GradientDrawable gradientDrawable = (GradientDrawable) rippleDrawable.findDrawableByLayerId(R.id.ripple_creator_shape);
-            initGradientDrawable(gradientDrawable, builder);
-            gradientDrawable.setColors(getBgColorList(builder));
+            } else {
+                initSelectorDrawable(builder);
 
-            mRippleDrawable = rippleDrawable;
-
-        }else {
-            //设置普通的点按效果
-            GradientDrawable normalGradientDrawable = new GradientDrawable();
-            initGradientDrawable(normalGradientDrawable, builder);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                normalGradientDrawable.setColors(getBgColorList(builder));
-            }else {
-                normalGradientDrawable.setColor(getColor(builder.getNormalColor()));
             }
-
-            GradientDrawable pressGradientDrawable = new GradientDrawable();
-            initGradientDrawable(pressGradientDrawable, builder);
-            pressGradientDrawable.setColor(getColor(builder.getPressColor()));
-
-
-            StateListDrawable stateListDrawable = newSelector( normalGradientDrawable, pressGradientDrawable);
-
-            mRippleDrawable = stateListDrawable;
         }
+    }
+
+    private void initSelectorDrawable(Builder builder) {
+        //设置普通的点按效果
+        GradientDrawable normalGradientDrawable = new GradientDrawable();
+        initGradientDrawable(normalGradientDrawable, builder);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            normalGradientDrawable.setColors(getBgColorList(builder));
+        }else {
+            normalGradientDrawable.setColor(getColor(builder.getNormalColor()));
+        }
+
+        GradientDrawable pressGradientDrawable = new GradientDrawable();
+        initGradientDrawable(pressGradientDrawable, builder);
+        pressGradientDrawable.setColor(getColor(builder.getPressColor()));
+
+
+        StateListDrawable stateListDrawable = newSelector( normalGradientDrawable, pressGradientDrawable);
+
+        mRippleDrawable = stateListDrawable;
+    }
+
+    private void initRippleDrawable(Builder builder) {
+        //设置水波纹
+        RippleDrawable rippleDrawable = (RippleDrawable) builder.getmContext().getDrawable(R.drawable.ripple_creator_selector);
+        ColorStateList colorStateList = createColorStateList(builder.getPressColor(),builder.getRippleColor());
+        rippleDrawable.setColor(colorStateList);
+
+
+        GradientDrawable gradientDrawable = (GradientDrawable) rippleDrawable.findDrawableByLayerId(R.id.ripple_creator_shape);
+        initGradientDrawable(gradientDrawable, builder);
+        gradientDrawable.setColors(getBgColorList(builder));
+
+        mRippleDrawable = rippleDrawable;
     }
 
     private int getColor(@ColorRes int color){
@@ -148,6 +165,10 @@ public class JoyrunRipple {
         private GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
         //=======================设置背景颜色==================================
 
+        public static final int RIPPLE_MODE = 1;
+        public static final int SELECTOR_MODE = 2;
+        public static final int AUTOFIX_MODE = 3;
+        private int clickMode = AUTOFIX_MODE;
 
         private Context mContext;
 
@@ -260,6 +281,29 @@ public class JoyrunRipple {
 
         public Builder setOrientation(GradientDrawable.Orientation orientation) {
             this.orientation = orientation;
+            return this;
+        }
+
+        public int getClickMode() {
+            return clickMode;
+        }
+
+        public Builder setSelectorMode(boolean isSelectorMode){
+            if(isSelectorMode){
+                clickMode = SELECTOR_MODE;
+            }else {
+                clickMode = AUTOFIX_MODE;
+            }
+            return this;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        public Builder setRippleMode(boolean isRippleMode){
+            if(isRippleMode){
+                clickMode = RIPPLE_MODE;
+            }else {
+                clickMode = AUTOFIX_MODE;
+            }
             return this;
         }
     }
