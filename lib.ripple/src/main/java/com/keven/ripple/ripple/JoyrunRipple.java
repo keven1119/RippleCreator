@@ -27,21 +27,29 @@ public class JoyrunRipple {
 
     public JoyrunRipple(Builder builder){
         mBuilder = builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        if(builder.getClickMode() == Builder.RIPPLE_MODE){
-            initRippleDrawable(builder);
-        }else if(builder.getClickMode() == Builder.SELECTOR_MODE){
-            initSelectorDrawable(builder);
-        }else if(builder.getClickMode() == Builder.AUTOFIX_MODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(builder.getClickMode() == Builder.RIPPLE_MODE){
                 initRippleDrawable(builder);
-
-
-            } else {
+            }else if(builder.getClickMode() == Builder.SELECTOR_MODE){
                 initSelectorDrawable(builder);
+            }else if(builder.getClickMode() == Builder.AUTOFIX_MODE) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    initRippleDrawable(builder);
 
+
+                } else {
+                    initSelectorDrawable(builder);
+
+                }
             }
+
+        }else {
+            initSelectorDrawable(builder);
         }
+
+
+
     }
 
     private void initSelectorDrawable(Builder builder) {
@@ -64,6 +72,7 @@ public class JoyrunRipple {
         mRippleDrawable = stateListDrawable;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initRippleDrawable(Builder builder) {
         //设置水波纹
         RippleDrawable rippleDrawable = (RippleDrawable) builder.getmContext().getDrawable(R.drawable.ripple_creator_selector);
