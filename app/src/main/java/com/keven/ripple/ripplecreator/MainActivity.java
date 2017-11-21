@@ -1,13 +1,12 @@
 package com.keven.ripple.ripplecreator;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.keven.ripple.ripplecreator.helper.JoyrunRipple;
+import com.keven.ripple.ripple.JoyrunRipple;
 
 public class MainActivity extends AppCompatActivity {
 
