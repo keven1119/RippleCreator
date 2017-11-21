@@ -9,6 +9,9 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
+
+import com.keven.ripple.utils.DensityUtil;
 
 /**
  * Created by keven-liang on 2017/11/13.
@@ -26,12 +29,12 @@ public class JoyrunRipple {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             //设置水波纹
-            RippleDrawable rippleDrawable = (RippleDrawable) builder.getmContext().getDrawable(R.drawable.ripple_selector);
+            RippleDrawable rippleDrawable = (RippleDrawable) builder.getmContext().getDrawable(R.drawable.ripple_creator_selector);
             ColorStateList colorStateList = createColorStateList(builder.getPressColor(),builder.getRippleColor());
             rippleDrawable.setColor(colorStateList);
 
 
-            GradientDrawable gradientDrawable = (GradientDrawable) rippleDrawable.findDrawableByLayerId(R.id.ripple_shape);
+            GradientDrawable gradientDrawable = (GradientDrawable) rippleDrawable.findDrawableByLayerId(R.id.ripple_creator_shape);
             initGradientDrawable(gradientDrawable, builder);
             gradientDrawable.setColors(getBgColorList(builder));
 
@@ -59,21 +62,24 @@ public class JoyrunRipple {
     }
 
     private int getColor(@ColorRes int color){
-        int tempColor =0;
+        if(color < 0) {
+            int tempColor = 0;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tempColor = mBuilder.getmContext().getColor(color);
-        }else {
-            tempColor = mBuilder.getmContext().getResources().getColor(color);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tempColor = mBuilder.getmContext().getColor(color);
+            } else {
+                tempColor = mBuilder.getmContext().getResources().getColor(color);
+            }
+
+            return tempColor;
         }
-
-        return tempColor;
+        return Color.TRANSPARENT;
     }
 
     private void initGradientDrawable(GradientDrawable gradientDrawable, Builder builder){
 
-        gradientDrawable.setStroke(builder.getStrokeWidth(), getColor(builder.getStrokeColor()));
-        gradientDrawable.setCornerRadius(builder.getRadius());
+        gradientDrawable.setStroke(DensityUtil.dip2px(builder.getmContext(),builder.getStrokeWidth()), getColor(builder.getStrokeColor()));
+        gradientDrawable.setCornerRadius(DensityUtil.dip2px(builder.getmContext(),builder.getRadius()));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             gradientDrawable.setOrientation(builder.getOrientation());
         }
@@ -129,14 +135,14 @@ public class JoyrunRipple {
 
     public static class Builder{
 
-        private int pressColor = Color.TRANSPARENT;
+        private int pressColor = -1;
         private int radius = 0;
-        private int rippleColor = Color.TRANSPARENT;
+        private int rippleColor = -1;
         private int strokeWidth = 0;
         private int strokeColor = -1;
 
         //=======================设置背景颜色==================================
-        private int normalColor = Color.TRANSPARENT;
+        private int normalColor = -1;
         private int startColor = -1;
         private int endColor =-1;
         private GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
@@ -145,7 +151,7 @@ public class JoyrunRipple {
 
         private Context mContext;
 
-        public Builder(Context context){
+        public Builder(@NonNull Context context){
             mContext = context;
         }
 
@@ -160,6 +166,12 @@ public class JoyrunRipple {
             return radius;
         }
 
+
+        /**
+         * 设置圆角半径
+         * @param radius  单位：dp
+         * @return
+         */
         public Builder setRadius(int radius) {
             this.radius = radius;
             return this;
@@ -205,6 +217,11 @@ public class JoyrunRipple {
             return strokeWidth;
         }
 
+        /**
+         * 设置边框的宽度
+         * @param strokeWidth  单位：dp
+         * @return
+         */
         public Builder setStrokeWidth(int strokeWidth) {
             this.strokeWidth = strokeWidth;
             return this;
@@ -214,7 +231,7 @@ public class JoyrunRipple {
             return strokeColor;
         }
 
-        public Builder setStrokeColor(int strokeColor) {
+        public Builder setStrokeColor(@ColorRes int strokeColor) {
             this.strokeColor = strokeColor;
             return this;
         }

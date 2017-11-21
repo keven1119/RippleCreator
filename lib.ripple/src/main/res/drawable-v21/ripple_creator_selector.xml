@@ -2,7 +2,7 @@
 <!-- ripple 是5.0才出现的新标签-->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/black_item_select"><!-- 点击出现的水波纹的颜色 -->
-    <item android:id="@+id/ripple_shape">
+    <item android:id="@+id/ripple_creator_shape">
         <shape
             xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
 
