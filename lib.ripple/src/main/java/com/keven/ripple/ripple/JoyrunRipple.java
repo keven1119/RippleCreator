@@ -62,7 +62,7 @@ public class JoyrunRipple {
     }
 
     private int getColor(@ColorRes int color){
-        if(color < 0) {
+        if(color >= 0) {
             int tempColor = 0;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
