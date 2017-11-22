@@ -11,21 +11,27 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.keven.ripple.utils.DensityUtil;
+
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
 
 /**
  * Created by keven-liang on 2017/11/13.
  */
 
-public class JoyrunRipple {
+public class RippleCreator {
 
 
     private Drawable mRippleDrawable;
     private Builder mBuilder;
 
 
-    public JoyrunRipple(Builder builder){
+    public RippleCreator(Builder builder){
         mBuilder = builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -38,9 +44,18 @@ public class JoyrunRipple {
         }else {
             initSelectorDrawable(builder);
         }
+    }
 
+    public void setBindView(View view){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(getBgDrawable());
+        }else {
+            view.setBackgroundDrawable(getBgDrawable());
+        }
+    }
 
-
+    public Drawable getBgDrawable(){
+        return mRippleDrawable;
     }
 
     private void initSelectorDrawable(Builder builder) {
@@ -70,10 +85,11 @@ public class JoyrunRipple {
         ColorStateList colorStateList = createColorStateList(builder.getPressColor(),builder.getRippleColor());
         rippleDrawable.setColor(colorStateList);
 
-
-        GradientDrawable gradientDrawable = (GradientDrawable) rippleDrawable.findDrawableByLayerId(R.id.ripple_creator_shape);
+        GradientDrawable gradientDrawable = new GradientDrawable();
         initGradientDrawable(gradientDrawable, builder);
         gradientDrawable.setColors(getBgColorList(builder));
+
+        rippleDrawable.setDrawableByLayerId(R.id.ripple_creator_shape, gradientDrawable);
 
         mRippleDrawable = rippleDrawable;
     }
@@ -105,7 +121,7 @@ public class JoyrunRipple {
 
 
     /** 设置Selector。 */
-    public  StateListDrawable newSelector(Drawable normal, Drawable pressed) {
+    private   StateListDrawable newSelector(Drawable normal, Drawable pressed) {
         StateListDrawable bg = new StateListDrawable();
         // View.PRESSED_ENABLED_STATE_SET
         bg.addState(new int[] { android.R.attr.state_pressed }, pressed);
@@ -116,7 +132,12 @@ public class JoyrunRipple {
         return bg;
     }
 
-    public int[] getBgColorList(Builder builder){
+    /**
+     * 获取背景颜色
+     * @param builder
+     * @return
+     */
+    private int[] getBgColorList(Builder builder){
         int startColor = builder.getStartColor();
         int endColor = builder.getEndColor();
         int normalColor = builder.getNormalColor();
@@ -127,7 +148,6 @@ public class JoyrunRipple {
             colorList[0] = getColor(startColor);
             colorList[1] = getColor(endColor);
         }else {
-
             colorList[0] = getColor(normalColor);
             colorList[1] = getColor(normalColor);
 
@@ -144,10 +164,6 @@ public class JoyrunRipple {
         states[2] = new int[] {};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
-    }
-
-    public Drawable getRippleDrawable() {
-        return mRippleDrawable;
     }
 
     public static class Builder{
@@ -176,10 +192,9 @@ public class JoyrunRipple {
         }
 
 
-        public Drawable build(){
-            JoyrunRipple joyrunRipple = new JoyrunRipple(this);
-            Drawable rippleDrawable = joyrunRipple.getRippleDrawable();
-            return rippleDrawable;
+        public RippleCreator build(){
+            RippleCreator rippleCreator = new RippleCreator(this);
+            return rippleCreator;
         }
 
         public int getRadius() {
