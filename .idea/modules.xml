@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/RippleCreator.iml" filepath="$PROJECT_DIR$/RippleCreator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib.ripple/lib.ripple.iml" filepath="$PROJECT_DIR$/lib.ripple/lib.ripple.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/RippleCreator.iml" filepath="$PROJECT_DIR$/.idea/RippleCreator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RippleCreator.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RippleCreator.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib.ripple/RippleCreator.lib.ripple.iml" filepath="$PROJECT_DIR$/.idea/modules/lib.ripple/RippleCreator.lib.ripple.iml" />
     </modules>
   </component>
 </project>
