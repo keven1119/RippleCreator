@@ -2,11 +2,12 @@ package com.keven.ripple.ripplecreator;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.keven.ripple.ripple.RippleCreator;
 

@@ -9,9 +9,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 
 import com.keven.ripple.utils.DensityUtil;
 
